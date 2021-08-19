@@ -298,6 +298,12 @@ func TestIsValidLabelValue(t *testing.T) {
 		"1234",                  // only num
 		strings.Repeat("a", 63), // to the limit
 		"",                      // empty value
+		"-starts-with-dash",
+		"ends-with-dash-",
+		".starts.with.dot",
+		"ends.with.dot.",
+		"email@email.com",
+		"indent.com/namespaced/identifier",
 	}
 	for i := range successCases {
 		if errs := IsValidLabelValue(successCases[i]); len(errs) != 0 {
@@ -306,18 +312,14 @@ func TestIsValidLabelValue(t *testing.T) {
 	}
 
 	errorCases := []string{
-		"nospecialchars%^=@",
+		"specialchars%^=@",
 		"Tama-nui-te-rā.is.Māori.sun",
 		"\\backslashes\\are\\bad",
-		"-starts-with-dash",
-		"ends-with-dash-",
-		".starts.with.dot",
-		"ends.with.dot.",
 		strings.Repeat("a", 64), // over the limit
 	}
-	for i := range errorCases {
+	for i, c := range errorCases {
 		if errs := IsValidLabelValue(errorCases[i]); len(errs) == 0 {
-			t.Errorf("case[%d] expected failure", i)
+			t.Errorf("case[%d] (%v) expected failure", i, c)
 		}
 	}
 }

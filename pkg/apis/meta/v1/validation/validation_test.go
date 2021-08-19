@@ -42,6 +42,8 @@ func TestValidateLabels(t *testing.T) {
 		{"1.2.3.4/5678": "bar"},
 		{"UpperCaseAreOK123": "bar"},
 		{"goodvalue": "123_-.BaR"},
+		{"cantendwithadash-": "bar"},
+		{"only/one/slash": "bar"},
 	}
 	for i := range successCases {
 		errs := ValidateLabels(successCases[i], field.NewPath("field"))
@@ -50,8 +52,7 @@ func TestValidateLabels(t *testing.T) {
 		}
 	}
 
-	namePartErrMsg := "name part must consist of"
-	nameErrMsg := "a qualified name must consist of"
+	namePartErrMsg := "name must consist of"
 	labelErrMsg := "a valid label must be an empty string or consist of"
 	maxLengthErrMsg := "must be no more than"
 
@@ -60,8 +61,6 @@ func TestValidateLabels(t *testing.T) {
 		expect string
 	}{
 		{map[string]string{"nospecialchars^=@": "bar"}, namePartErrMsg},
-		{map[string]string{"cantendwithadash-": "bar"}, namePartErrMsg},
-		{map[string]string{"only/one/slash": "bar"}, nameErrMsg},
 		{map[string]string{strings.Repeat("a", 254): "bar"}, maxLengthErrMsg},
 	}
 	for i := range labelNameErrorCases {
