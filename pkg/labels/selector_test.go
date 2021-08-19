@@ -45,6 +45,8 @@ func TestSelectorParse(t *testing.T) {
 		"!x",
 		"x>1",
 		"x>1,z<5",
+		"indent.com/some/label=indent.com/some/value",
+		"indent.com/some/label=some@email.com",
 	}
 	testBadStrings := []string{
 		"x=a||y=b",
