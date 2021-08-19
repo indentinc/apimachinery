@@ -42,6 +42,8 @@ func TestValidateLabels(t *testing.T) {
 		{"1.2.3.4/5678": "bar"},
 		{"UpperCaseAreOK123": "bar"},
 		{"goodvalue": "123_-.BaR"},
+		{"cantendwithadash-": "bar"},
+		{"only/one/slash": "bar"},
 	}
 	for i := range successCases {
 		errs := ValidateLabels(successCases[i], field.NewPath("field"))
@@ -50,8 +52,7 @@ func TestValidateLabels(t *testing.T) {
 		}
 	}
 
-	namePartErrMsg := "name part must consist of"
-	nameErrMsg := "a qualified name must consist of"
+	namePartErrMsg := "name must consist of"
 	labelErrMsg := "a valid label must be an empty string or consist of"
 	maxLengthErrMsg := "must be no more than"
 
@@ -60,8 +61,6 @@ func TestValidateLabels(t *testing.T) {
 		expect string
 	}{
 		{map[string]string{"nospecialchars^=@": "bar"}, namePartErrMsg},
-		{map[string]string{"cantendwithadash-": "bar"}, namePartErrMsg},
-		{map[string]string{"only/one/slash": "bar"}, nameErrMsg},
 		{map[string]string{strings.Repeat("a", 254): "bar"}, maxLengthErrMsg},
 	}
 	for i := range labelNameErrorCases {
@@ -329,7 +328,7 @@ func TestValidateConditions(t *testing.T) {
 		{
 			name: "bunch-of-invalid-fields",
 			conditions: []metav1.Condition{{
-				Type:               ":invalid",
+				Type:               "\\invalid",
 				Status:             "unknown",
 				ObservedGeneration: -1,
 				LastTransitionTime: metav1.Time{},
@@ -337,7 +336,7 @@ func TestValidateConditions(t *testing.T) {
 				Message:            "",
 			}},
 			validateErrs: func(t *testing.T, errs field.ErrorList) {
-				needle := `status.conditions[0].type: Invalid value: ":invalid": name part must consist of alphanumeric characters, '-', '_' or '.', and must start and end with an alphanumeric character (e.g. 'MyName',  or 'my.name',  or '123-abc', regex used for validation is '([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9]')`
+				needle := `status.conditions[0].type: Invalid value: "\\invalid": name must consist of alphanumeric characters and '-', '_', '.', '/', or '@' (e.g. 'MyName',  or 'my.name',  or '123-abc', regex used for validation is '[0-9A-Za-z\/\@_\-\.]*')`
 				if !hasError(errs, needle) {
 					t.Errorf("missing %q in\n%v", needle, errorsAsString(errs))
 				}
