@@ -2,6 +2,10 @@
 
 Scheme, typing, encoding, decoding, and conversion packages for Kubernetes and Kubernetes-like API objects.
 
+> This fork is intended for reuse of Kubernetes logic, with slight modification, for Indent features modeled on Kubernetes. Changes include:
+>
+> + Less restrictive validation for label keys/values.
+
 
 ## Purpose
 
