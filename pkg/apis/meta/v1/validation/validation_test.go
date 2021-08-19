@@ -328,7 +328,7 @@ func TestValidateConditions(t *testing.T) {
 		{
 			name: "bunch-of-invalid-fields",
 			conditions: []metav1.Condition{{
-				Type:               ":invalid",
+				Type:               "\\invalid",
 				Status:             "unknown",
 				ObservedGeneration: -1,
 				LastTransitionTime: metav1.Time{},
@@ -336,7 +336,7 @@ func TestValidateConditions(t *testing.T) {
 				Message:            "",
 			}},
 			validateErrs: func(t *testing.T, errs field.ErrorList) {
-				needle := `status.conditions[0].type: Invalid value: ":invalid": name part must consist of alphanumeric characters, '-', '_' or '.', and must start and end with an alphanumeric character (e.g. 'MyName',  or 'my.name',  or '123-abc', regex used for validation is '([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9]')`
+				needle := `status.conditions[0].type: Invalid value: "\\invalid": name must consist of alphanumeric characters and '-', '_', '.', '/', or '@' (e.g. 'MyName',  or 'my.name',  or '123-abc', regex used for validation is '[0-9A-Za-z\/\@_\-\.]*')`
 				if !hasError(errs, needle) {
 					t.Errorf("missing %q in\n%v", needle, errorsAsString(errs))
 				}
