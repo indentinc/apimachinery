@@ -27,7 +27,13 @@ import (
 	"k8s.io/apimachinery/pkg/util/validation/field"
 )
 
+const qnameCharFmt string = "[A-Za-z0-9]"
+const qnameExtCharFmt string = "[-A-Za-z0-9_.]"
+const qualifiedNameFmt string = "(" + qnameCharFmt + qnameExtCharFmt + "*)?" + qnameCharFmt
+const qualifiedNameErrMsg string = "must consist of alphanumeric characters, '-', '_' or '.', and must start and end with an alphanumeric character"
 const qualifiedNameMaxLength int = 63
+
+var qualifiedNameRegexp = regexp.MustCompile("^" + qualifiedNameFmt + "$")
 
 // IsQualifiedName tests whether the value passed is what Kubernetes calls a
 // "qualified name".  This is a format used in various places throughout the
@@ -35,10 +41,31 @@ const qualifiedNameMaxLength int = 63
 // Otherwise an empty list (or nil) is returned.
 func IsQualifiedName(value string) []string {
 	var errs []string
-	if len(value) == 0 {
+	parts := strings.Split(value, "/")
+	var name string
+	switch len(parts) {
+	case 1:
+		name = parts[0]
+	case 2:
+		var prefix string
+		prefix, name = parts[0], parts[1]
+		if len(prefix) == 0 {
+			errs = append(errs, "prefix part "+EmptyError())
+		} else if msgs := IsDNS1123Subdomain(prefix); len(msgs) != 0 {
+			errs = append(errs, prefixEach(msgs, "prefix part ")...)
+		}
+	default:
+		return append(errs, "a qualified name "+RegexError(qualifiedNameErrMsg, qualifiedNameFmt, "MyName", "my.name", "123-abc")+
+			" with an optional DNS subdomain prefix and '/' (e.g. 'example.com/MyName')")
+	}
+
+	if len(name) == 0 {
 		errs = append(errs, "name part "+EmptyError())
-	} else if len(value) > qualifiedNameMaxLength {
+	} else if len(name) > qualifiedNameMaxLength {
 		errs = append(errs, "name part "+MaxLenError(qualifiedNameMaxLength))
+	}
+	if !qualifiedNameRegexp.MatchString(name) {
+		errs = append(errs, "name part "+RegexError(qualifiedNameErrMsg, qualifiedNameFmt, "MyName", "my.name", "123-abc"))
 	}
 	return errs
 }

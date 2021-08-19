@@ -61,7 +61,7 @@ func ValidateLabelSelectorRequirement(sr metav1.LabelSelectorRequirement, fldPat
 // ValidateLabelName validates that the label name is correctly defined.
 func ValidateLabelName(labelName string, fldPath *field.Path) field.ErrorList {
 	allErrs := field.ErrorList{}
-	for _, msg := range validation.IsQualifiedName(labelName) {
+	for _, msg := range validation.IsIndentLabelName(labelName) {
 		allErrs = append(allErrs, field.Invalid(fldPath, labelName, msg))
 	}
 	return allErrs
