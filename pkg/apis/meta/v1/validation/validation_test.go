@@ -336,7 +336,7 @@ func TestValidateConditions(t *testing.T) {
 				Message:            "",
 			}},
 			validateErrs: func(t *testing.T, errs field.ErrorList) {
-				needle := `status.conditions[0].type: Invalid value: "\\invalid": name must consist of alphanumeric characters and '-', '_', '.', '/', or '@' (e.g. 'MyName',  or 'my.name',  or '123-abc', regex used for validation is '[0-9A-Za-z\/\@_\-\.]*')`
+				needle := `status.conditions[0].type: Invalid value: "\\invalid": name must consist of alphanumeric characters and '-', '_', '.', '/', or '@' (e.g. 'MyName',  or 'my.name',  or '123-abc', regex used for validation is '[0-9A-Za-z\/\@_\-\.\+]*')`
 				if !hasError(errs, needle) {
 					t.Errorf("missing %q in\n%v", needle, errorsAsString(errs))
 				}

@@ -152,7 +152,7 @@ func IsDomainPrefixedPath(fldPath *field.Path, dpPath string) field.ErrorList {
 	return allErrs
 }
 
-const labelValueFmt string = `[0-9A-Za-z\/\@_\-\.]*`
+const labelValueFmt string = `[0-9A-Za-z\/\@_\-\.\+]*`
 const labelValueErrMsg string = "a valid label must be an empty string or consist of alphanumeric characters, '-', '_' or '.', and must start and end with an alphanumeric character"
 
 // LabelValueMaxLength is a label's max length

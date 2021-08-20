@@ -303,6 +303,7 @@ func TestIsValidLabelValue(t *testing.T) {
 		".starts.with.dot",
 		"ends.with.dot.",
 		"email@email.com",
+		"email+ext@email.com",
 		"indent.com/namespaced/identifier",
 	}
 	for i := range successCases {
