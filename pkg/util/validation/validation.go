@@ -157,7 +157,7 @@ const labelValueFmt string = `[0-9A-Za-z\/\@_\-\.\+:]*`
 const labelValueErrMsg string = "a valid label must be an empty string or consist of alphanumeric characters, '-', '_' or '.', and must start and end with an alphanumeric character"
 
 // LabelValueMaxLength is a label's max length
-const LabelValueMaxLength int = 63
+const LabelValueMaxLength int = 128
 
 var labelValueRegexp = regexp.MustCompile("^" + labelValueFmt + "$")
 
