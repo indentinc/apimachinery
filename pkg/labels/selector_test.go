@@ -917,12 +917,12 @@ func TestValidatedSelectorFromSet(t *testing.T) {
 		},
 		{
 			name:  "Invalid Set, value too long",
-			input: Set{"Key": "axahm2EJ8Phiephe2eixohbee9eGeiyees1thuozi1xoh0GiuH3diewi8iem7Nui"},
+			input: Set{"Key": "axahm2EJ8Phiephe2eixohbee9eGeiyees1thuozi1xoh0GiuH3diewi8iem7Nuiaxahm2EJ8Phiephe2eixohbee9eGeiyees1thuozi1xoh0GiuH3diewi8iem7Nuia"},
 			expectedError: field.ErrorList{
 				&field.Error{
 					Type:     field.ErrorTypeInvalid,
 					Field:    "values[0][Key]",
-					BadValue: "axahm2EJ8Phiephe2eixohbee9eGeiyees1thuozi1xoh0GiuH3diewi8iem7Nui",
+					BadValue: "axahm2EJ8Phiephe2eixohbee9eGeiyees1thuozi1xoh0GiuH3diewi8iem7Nuiaxahm2EJ8Phiephe2eixohbee9eGeiyees1thuozi1xoh0GiuH3diewi8iem7Nuia",
 				},
 			},
 		},
